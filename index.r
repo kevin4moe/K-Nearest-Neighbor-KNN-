@@ -24,37 +24,93 @@ flores = flores[-candidatos, ]
 conejosTest = data.frame(original = conejos$Species, nuevo = "")
 
 for (test in 1:length(candidatos)) {
-  distancia_k = distancia(
+  # Calculo de la distancia entre la muestra y todo el conjunto
+  distancia_sepal = distancia(
     conejos$Sepal.Length[test],
     flores$Sepal.Length,
     conejos$Sepal.Width[test],
     flores$Sepal.Width
   )
+  distancia_petal = distancia(
+    conejos$Petal.Length[test],
+    flores$Petal.Length,
+    conejos$Petal.Width[test],
+    flores$Petal.Width
+  )
 
-  k_1 = data.frame(
-    distancia_k,
+  # Creación de un data frame con las distancias y sus respectivas distancias
+  k_n = data.frame(
+    distancia_sepal,
+    distancia_petal,
     Species = flores$Species
   )
-  k_1 = k_1[order(k_1$distancia_k),]
-  write.csv(k_1[1:10, ], paste("./final/tests/", "k_", test, ".csv", sep = ""))
+  k_n = k_n[order(k_n$distancia_sepal),]
+  write.csv(k_n[1:10, ], paste("./tests/", "k_", test, ".csv", sep = ""))
 
   for (q in seq(from = 0.2, to = 1, by = 0.05)) {
-    k_1_cerca = k_1[k_1$distancia_k < q, ]
-    if (length(k_1_cerca[ ,1]) >= 5) {
-      species = k_1_cerca$Species[1:5]
+    k_n_cerca = k_n[k_n$distancia_sepal < q, ]
+    if (length(k_n_cerca[ ,1]) >= 5) {
+      species = k_n_cerca$Species[1:5]
       muestra = as.data.frame(table(species))
       muestra = muestra[order(muestra$Freq, decreasing = TRUE), ]
       conejosTest$nuevo[test] = as.vector(muestra$species)[1]
-      break()
+      break
     }
   }
 }
-write.csv(conejosTest, paste("./final/tests/", "resumen", ".csv", sep = ""))
+write.csv(conejosTest, paste("./tests/", "resumen", ".csv", sep = ""))
 
-# View(flores[conejos,])
+point_size = 1
+png(file="Petal_plot.png", width = 2000, height = 2000, units = "px", pointsize = 30)
+plot(
+  flores$Petal.Length,
+  flores$Petal.Width,
+  main="Petal",
+  xlab="Petal Length",
+  ylab="Petal Width",
+  xlim=c(0, 7),
+  ylim=c(0, 2.5)
+)
+points(
+  conejos$Petal.Length,
+  conejos$Petal.Width, 
+  type = "p",
+  pch = 19,
+  col = "red",
+)
+points(
+  flores$Petal.Length[flores$Species == "setosa"],
+  flores$Petal.Width[flores$Species == "setosa"], 
+  type = "p",
+  pch = 11,
+  col = "#e89eff",
+  cex = point_size,
+)
+points(
+  flores$Petal.Length[flores$Species == "virginica"],
+  flores$Petal.Width[flores$Species == "virginica"], 
+  type = "p",
+  pch = 11,
+  col = "#ffd900",
+  cex = point_size,
+)
+points(
+  flores$Petal.Length[flores$Species == "versicolor"],
+  flores$Petal.Width[flores$Species == "versicolor"], 
+  type = "p",
+  pch = 11,
+  col = "#bbff00",
+  cex = point_size,
+)
+dev.off()
+
+png(file="Sepal_plot.png", width = 2000, height = 2000, units = "px", pointsize = 30)
 plot(
   flores$Sepal.Length,
   flores$Sepal.Width,
+  main="Sepal",
+  xlab="Sepal Length",
+  ylab="Sepal Width",
   xlim=c(4, 8),
   ylim=c(2, 4.5)
 )
@@ -66,13 +122,27 @@ points(
   col = "red",
 )
 points(
-  conejos$Sepal.Length[1],
-  conejos$Sepal.Width[1], 
+  flores$Sepal.Length[flores$Species == "setosa"],
+  flores$Sepal.Width[flores$Species == "setosa"], 
   type = "p",
-  pch = 19,
-  col = "blue",
+  pch = 11,
+  col = "#e89eff",
+  cex = point_size,
 )
-# lines(flores[,1:2], type="p", col="green")
-# lines(conejos[2,1:2], type="l", col="green")
-
-# plot(flores$Petal.Length, flores$Petal.Width)
+points(
+  flores$Sepal.Length[flores$Species == "virginica"],
+  flores$Sepal.Width[flores$Species == "virginica"], 
+  type = "p",
+  pch = 11,
+  col = "#ffd900",
+  cex = point_size,
+)
+points(
+  flores$Sepal.Length[flores$Species == "versicolor"],
+  flores$Sepal.Width[flores$Species == "versicolor"], 
+  type = "p",
+  pch = 11,
+  col = "#bbff00",
+  cex = point_size,
+)
+dev.off()
