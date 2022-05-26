@@ -1,0 +1,4 @@
+/tests
+
+*.png
+!*.example.png
