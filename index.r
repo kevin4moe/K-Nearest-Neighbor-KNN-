@@ -239,7 +239,7 @@ plot(
 puntos.sepal = precisionTable.sepal[order(precisionTable.sepal$precision),]
 tabla_puntos = as.data.frame(table(puntos.sepal$precision))
 axis(1, at = c(1, 5, 10, 15, 20))
-axis(2, at = as.vector(tabla_puntos$Var1), las = 1,)
+axis(2, at = format(round(as.numeric(as.vector(tabla_puntos$Var1)), 2), nsmall = 2), las = 1,)
 paleta = hcl.colors(
   length(table(puntos.sepal$precision)),
   palette = "Temps"
@@ -285,7 +285,7 @@ plot(
 puntos.petal = precisionTable.petal[order(precisionTable.petal$precision),]
 tabla_puntos = as.data.frame(table(puntos.petal$precision))
 axis(1, at = c(1, 5, 10, 15, 20))
-axis(2, at = as.vector(tabla_puntos$Var1), las = 1,)
+axis(2, at = format(round(as.numeric(as.vector(tabla_puntos$Var1)), 2), nsmall = 2), las = 1,)
 paleta = hcl.colors(
   length(table(puntos.petal$precision)),
   palette = "Temps"
